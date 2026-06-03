@@ -1,0 +1,27 @@
+{
+  "name": "cart",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@bion-mfe-ui/core": "^0.1.2",
+    "@bion-mfe-ui/icons": "^0.1.0",
+    "@bion-mfe-ui/tokens": "^0.1.0",
+    "@bion-mfe-ui/vue": "^0.1.0",
+    "lit": "^3.2.0",
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@module-federation/vite": "^1.16.2",
+    "@types/node": "^25.9.1",
+    "@vitejs/plugin-vue": "^5.1.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "vue-tsc": "^2.0.0"
+  }
+}
