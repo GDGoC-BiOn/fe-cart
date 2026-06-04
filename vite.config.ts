@@ -3,18 +3,6 @@ import vue from "@vitejs/plugin-vue";
 import { federation } from "@module-federation/vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
-// lit + the bion web components must be shared singletons across every MFE,
-// otherwise a second `customElements.define('bion-…')` throws. Trailing-slash
-// keys dedupe subpath imports (lit/decorators.js, @bion-mfe-ui/core/cart-drawer).
-const bion = {
-  lit: { singleton: true },
-  "lit/": { singleton: true },
-  "@bion-mfe-ui/core": { singleton: true },
-  "@bion-mfe-ui/core/": { singleton: true },
-  "@bion-mfe-ui/icons": { singleton: true },
-  "@bion-mfe-ui/tokens": { singleton: true },
-};
-
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
   const port = Number(env.VITE_PORT) || 3002;
@@ -32,21 +20,15 @@ export default defineConfig(({ mode }) => {
         exposes: {
           "./mount": "./src/mount.ts",
         },
-        shared: { vue: { singleton: true }, ...bion },
+        // Only vue is shared. lit + @bion-mfe-ui are bundled here, not shared —
+        // see the shell config for why (collapses the MF request waterfall;
+        // double-define is guarded by @bion-mfe-ui/core@^0.1.2).
+        shared: { vue: { singleton: true } },
       }),
       // AFTER federation: inline tokens.css + app CSS into the JS chunks so the
       // host can load this remote's styles cross-origin.
       cssInjectedByJsPlugin(),
     ],
-    optimizeDeps: {
-      exclude: [
-        "@bion-mfe-ui/vue",
-        "@bion-mfe-ui/core",
-        "@bion-mfe-ui/icons",
-        "@bion-mfe-ui/tokens",
-        "lit",
-      ],
-    },
     build: { target: "chrome89" },
   };
 });
