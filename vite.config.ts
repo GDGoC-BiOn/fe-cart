@@ -14,17 +14,19 @@ export default defineConfig(({ mode }) => {
     preview: { port, strictPort: true, cors: true },
     plugins: [
       vue(),
-      federation({
-        name: "cart",
-        filename: "remoteEntry.js",
-        exposes: {
-          "./mount": "./src/mount.ts",
-        },
-        // Only vue is shared. lit + @bion-mfe-ui are bundled here, not shared —
-        // see the shell config for why (collapses the MF request waterfall;
-        // double-define is guarded by @bion-mfe-ui/core@^0.1.2).
-        shared: { vue: { singleton: true } },
-      }),
+      // DEMO Act 3 — uncomment to expose the cart as a remote (./mount).
+      // Until then cart runs solo at :3002 via src/standalone.ts (no remoteEntry.js).
+      // federation({
+      //   name: "cart",
+      //   filename: "remoteEntry.js",
+      //   exposes: {
+      //     "./mount": "./src/mount.ts",
+      //   },
+      //   // Only vue is shared. lit + @bion-mfe-ui are bundled here, not shared —
+      //   // see the shell config for why (collapses the MF request waterfall;
+      //   // double-define is guarded by @bion-mfe-ui/core@^0.1.2).
+      //   shared: { vue: { singleton: true } },
+      // }),
       // AFTER federation: inline tokens.css + app CSS into the JS chunks so the
       // host can load this remote's styles cross-origin.
       cssInjectedByJsPlugin(),
